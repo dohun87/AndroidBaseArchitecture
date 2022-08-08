@@ -1,0 +1,28 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    //Hilt 추가중 Plugin [id: 'dagger.hilt.android.plugin'] was not found in any of the following sources
+    //발생 하게 될 시 해당 내역을 추가해서 하도록 한다.
+    //https://rkdrkd-history.tistory.com/m/12
+    resolutionStrategy {
+        eachPlugin {
+            if( requested.id.id == 'dagger.hilt.android.plugin') {
+                useModule("com.google.dagger:hilt-android-gradle-plugin:2.39.1")
+            }
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "examarch"
+include ':app'
+include ':data'
+include ':domain'
