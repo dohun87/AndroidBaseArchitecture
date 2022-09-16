@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "38103525136",
+    "project_id": "fastlane-exam",
+    "storage_bucket": "fastlane-exam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38103525136:android:ea6c4101bbbff2c8576795",
+        "android_client_info": {
+          "package_name": "com.dandycat.examarch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38103525136-tvd9s6eu197d2he2v21duuhdr80pvdm1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcZ-zwFMMoQFbOmzMwYO6DZJWkrjDeIDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38103525136-tvd9s6eu197d2he2v21duuhdr80pvdm1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
