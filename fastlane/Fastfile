@@ -1,0 +1,103 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store
+  end
+  
+  desc "Fireabase App Distribution Test"
+  lane :fDebug do
+	gradle(task: "clean assembleDebug",
+			print_command: true,
+			properties: { #코드사이닝 관련
+				"android.injected.signing.store.file" => ENV['PLAYSTORE_JKS'],
+				"android.injected.signing.store.password" => ENV['PLAYSTORE_PWD'],
+				"android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+				"android.injected.signing.key.password" => ENV['KEY_PASSWORD']
+			}
+	)
+	firebase_app_distribution( #Firebase 동작 연동을 준비해준다
+            app: ENV['FIREBASE_APP_ID'],
+            #testers: "dohun8832@gmail.com, clrmr1234@gmail.com",
+			testers: "dohun8832@gmail.com",
+            release_notes: "빌드 배포 테스트 릴리즈 노트 입니다"
+        )
+		
+	slack( #슬랙 성공시에 메시지를 전달한다
+		message:"Firebase에 테스트 버전이 배포 되었습니다.",
+		channel:"#mdt-android-release",
+		success:true,
+		slack_url: ENV['SLACK_URL'],
+		default_payloads: [:git_branch]
+	)	
+	end
+	
+	desc "Fireabase App Distribution Test"
+	lane :fDebug_bundle do
+	gradle(task: "clean bundleRelease",
+			print_command: true,
+			properties: { #코드사이닝 관련
+				"android.injected.signing.store.file" => ENV['PLAYSTORE_JKS'],
+				"android.injected.signing.store.password" => ENV['PLAYSTORE_PWD'],
+				"android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+				"android.injected.signing.key.password" => ENV['KEY_PASSWORD']
+			}
+			
+	)
+	firebase_app_distribution(
+            app: ENV['FIREBASE_APP_ID'],
+            #testers: "dohun8832@gmail.com, clrmr1234@gmail.com",
+            release_notes: "This is Sparta!!!!!",
+			android_artifact_type:"AAB"
+        )	
+	slack( #슬랙 성공시에 메시지를 전달한다
+		message:"Firebase에 aab가 배포 되었습니다.",
+		channel:"#mdt-android-release",
+		success:true,
+		slack_url: ENV['SLACK_URL'],
+		default_payloads: [:git_branch]
+	)
+	end
+	
+	error do |lane, exception, options| #에러 발생시에 대한 슬랙 메시지 전달
+		slack(
+			message: "빌드 중 에러가 발생되었습니다 : #{exception}",
+			channel:"#mdt-android-release",
+			success:false,
+			slack_url: ENV['SLACK_URL'],
+			default_payloads: [:git_branch]
+		)
+	end	
+  
+end
