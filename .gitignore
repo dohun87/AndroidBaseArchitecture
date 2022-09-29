@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+#ENV 제외
+/fastlane/.env
