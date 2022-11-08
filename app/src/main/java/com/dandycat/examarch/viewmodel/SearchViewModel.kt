@@ -9,6 +9,7 @@ import com.dandycat.domain.usecase.SearchUseCase
 import com.dandycat.domain.util.ApiResult
 import com.dandycat.domain.util.Logger
 import com.dandycat.examarch.module.ToastModule
+import com.dandycat.examarch.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val searchUseCase : SearchUseCase,
     private val toastModule : ToastModule
 ) : ViewModel() {
@@ -34,6 +35,11 @@ class UserViewModel @Inject constructor(
 
     private val _notSearch = MutableLiveData<Boolean>() // 초기값 선언
     val notSearch : LiveData<Boolean> get() = _notSearch
+
+    private val _setRepoModel = MutableLiveData<Event<Boolean>>()
+    val setRepoModel : LiveData<Event<Boolean>> get() = _setRepoModel
+
+    private lateinit var mSelectRepoModel : RepositoryEntity
 
     fun checkInputKeyword(){
         viewModelScope.launch {
@@ -85,4 +91,11 @@ class UserViewModel @Inject constructor(
                 }
             }
         }
+
+    fun setRepoModel(selectModel : RepositoryEntity){
+        mSelectRepoModel = selectModel
+        _setRepoModel.postValue(Event(true))
+    }
+
+    fun getRepoModel() = mSelectRepoModel
 }

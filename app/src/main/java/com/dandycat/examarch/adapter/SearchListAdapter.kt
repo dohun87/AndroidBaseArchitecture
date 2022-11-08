@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dandycat.domain.model.RepositoryEntity
 import com.dandycat.examarch.databinding.ListSearchRepoBinding
+import com.dandycat.examarch.listener.RepoSelectInterface
 import javax.inject.Inject
 
 class SearchListAdapter : ListAdapter<RepositoryEntity, SearchListAdapter.ViewHolder>(diffUtil) {
@@ -20,12 +21,20 @@ class SearchListAdapter : ListAdapter<RepositoryEntity, SearchListAdapter.ViewHo
             oldItem.id == newItem.id
     }
 
+    private lateinit var mListener : RepoSelectInterface
+    fun addSelectListener(mListener : RepoSelectInterface){
+        this.mListener = mListener
+    }
+
     inner class ViewHolder(private val binding : ListSearchRepoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(data :RepositoryEntity){
             binding.entity=data
             //해당 로직을 넣을 경우 즉각적으로 데이터 바인드를 선언한다.
             binding.executePendingBindings()
+            binding.root.setOnClickListener {
+                if(::mListener.isInitialized) mListener.selectRepoModel(data)
+            }
         }
 
     }

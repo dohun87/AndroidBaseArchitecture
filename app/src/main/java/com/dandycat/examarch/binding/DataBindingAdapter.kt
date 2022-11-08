@@ -1,21 +1,18 @@
 package com.dandycat.examarch.binding
 
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingConversion
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dandycat.domain.model.RepositoryEntity
 import com.dandycat.domain.util.Logger
 import com.dandycat.examarch.adapter.SearchListAdapter
+import com.dandycat.examarch.listener.RepoSelectInterface
 import com.dandycat.examarch.util.EndlessScrollListener
-import com.dandycat.examarch.viewmodel.UserViewModel
+import com.dandycat.examarch.viewmodel.SearchViewModel
 
 @BindingConversion
 fun convertToVisibility(isVisible: Boolean) : Int {
@@ -30,7 +27,7 @@ fun ImageView.setProfileImageView(url : String){
 
 @BindingAdapter("setItems")
 fun RecyclerView.setSelectItem(list : List<RepositoryEntity>?){
-    Logger.d("setSelectItem")
+    Logger.d("setSelectItem - listSize : ${list?.size}")
     adapter?.let { // 어댑터가 있을 경우 데이터를 밀어넣어준다.
         list?.let {
             (adapter as SearchListAdapter).submitList(list)
@@ -46,11 +43,22 @@ fun RecyclerView.setSelectItem(list : List<RepositoryEntity>?){
 }
 
 @BindingAdapter("scrollListener")
-fun RecyclerView.setEndlessScrollListener(vm : UserViewModel){
+fun RecyclerView.setEndlessScrollListener(vm : SearchViewModel){
     val scrollListener = object : EndlessScrollListener(layoutManager as LinearLayoutManager) {
         override fun onLoadMore() {
             vm.addNextPage()
         }
     }
     addOnScrollListener(scrollListener)
+}
+
+@BindingAdapter("setSelectRepo")
+fun RecyclerView.selectRepoModel(vm : SearchViewModel){
+    adapter?.let {
+        (adapter as SearchListAdapter).addSelectListener(object : RepoSelectInterface{
+            override fun selectRepoModel(entity: RepositoryEntity) {
+                vm.setRepoModel(entity)
+            }
+        })
+    }
 }
