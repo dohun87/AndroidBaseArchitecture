@@ -42,18 +42,16 @@
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:textSize="14sp"
                     android:text="@={vm.query}"
-                    />
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/bt_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="검색"
                     android:layout_alignParentEnd="true"
-                    android:onClick="@{()->vm.getUserInfo()}"
-                    />
+                    android:onClick="@{()->vm.checkInputKeyword()}"
+                    android:text="검색" />
 
             </RelativeLayout>
 
@@ -67,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    bind:visibleNotSearch="@{vm.notSearch}"
+                    android:visibility="@{vm.notSearch}"
                     >
 
                     <TextView
@@ -90,6 +88,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
                     bind:setItems="@{vm.searchList}"
+                    bind:scrollListener="@{vm}"
                     />
 
             </RelativeLayout>
@@ -100,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            bind:visibleLoading="@{vm.loading}"
+            android:visibility="@{vm.isLoading}"
             />
 
     </FrameLayout>

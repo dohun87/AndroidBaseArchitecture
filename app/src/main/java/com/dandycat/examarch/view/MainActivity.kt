@@ -16,7 +16,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
-    private lateinit var mAdapter : SearchListAdapter
 
     private val vm : UserViewModel by viewModels()
 
@@ -25,8 +24,13 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
         binding.vm = vm
         binding.lifecycleOwner = this
+    }
 
-        mAdapter = SearchListAdapter()
-        binding.rvList.adapter = mAdapter
+    override fun onBackPressed() {
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

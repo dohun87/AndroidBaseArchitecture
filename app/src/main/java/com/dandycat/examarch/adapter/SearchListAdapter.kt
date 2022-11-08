@@ -24,6 +24,8 @@ class SearchListAdapter : ListAdapter<RepositoryEntity, SearchListAdapter.ViewHo
 
         fun bindData(data :RepositoryEntity){
             binding.entity=data
+            //해당 로직을 넣을 경우 즉각적으로 데이터 바인드를 선언한다.
+            binding.executePendingBindings()
         }
 
     }

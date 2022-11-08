@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(private val service : GitHubService) : SearchRepository {
 
-    override fun searchGitHubRepository(query: String) = flow{
-        val response = service.searchGithubRepository(query)
+    override fun searchGitHubRepository(query: String,page : Int) = flow{
+        val response = service.searchGithubRepository(query,page)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(ApiResult.Success(it.mapperSearchRepositoryEntity()))
