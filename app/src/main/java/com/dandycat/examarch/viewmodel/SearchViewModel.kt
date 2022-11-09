@@ -8,6 +8,7 @@ import com.dandycat.domain.model.RepositoryEntity
 import com.dandycat.domain.usecase.SearchUseCase
 import com.dandycat.domain.util.ApiResult
 import com.dandycat.domain.util.Logger
+import com.dandycat.examarch.listener.viewmodel.SearchViewModelListener
 import com.dandycat.examarch.module.ToastModule
 import com.dandycat.examarch.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,9 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchUseCase : SearchUseCase,
     private val toastModule : ToastModule
-) : ViewModel() {
+) : ViewModel(),
+    SearchViewModelListener
+{
 
     private var page = 1
     private var searchKeyword = ""
@@ -57,10 +60,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun addNextPage(){
-        page +=1
-        searchGithubRepo()
-    }
 
     private fun searchGithubRepo(){
         viewModelScope.launch {
@@ -92,10 +91,32 @@ class SearchViewModel @Inject constructor(
             }
         }
 
-    fun setRepoModel(selectModel : RepositoryEntity){
-        mSelectRepoModel = selectModel
+    fun getRepoModel() = mSelectRepoModel
+
+    /**
+     * 해당 로직에서는 position을 전달 받을 시 해당 포지션에 맞는 모델 추출 후 전달한다
+     * @author dohun8832
+     */
+    override fun clickPosition(position: Int) {
+        Logger.d("clickPosition : $position")
+    }
+
+    /**
+     * 해당 동작에서는 data를 casting 하여 데이터를 전달한다.
+     * @author doh8n8832
+     */
+    override fun clickData(data: Any) {
+        Logger.d("clickData : ${data.toString()}")
+        mSelectRepoModel = (data as RepositoryEntity)
         _setRepoModel.postValue(Event(true))
     }
 
-    fun getRepoModel() = mSelectRepoModel
+    /**
+     * 무한 스크롤 동작 시키기위한 로직을 추가하도록 한다.
+     * @author dohun8832
+     */
+    override fun loadMoreData() {
+        page +=1
+        searchGithubRepo()
+    }
 }

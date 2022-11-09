@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="entity"
+            name="repoEntity"
             type="com.dandycat.domain.model.RepositoryEntity" />
     </data>
 
@@ -27,7 +27,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                bind:userProfileImg="@{entity.owner.avatarUrl}"
+                bind:userProfileImg="@{repoEntity.owner.avatarUrl}"
                 />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:text="@{entity.name}"
+                android:text="@{repoEntity.name}"
                 tools:text="그루트"
                 android:layout_gravity="center"
                 android:layout_marginStart="4dp"
@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:textSize="16sp"
             android:textColor="@color/black"
-            android:text="@{entity.description}"
+            android:text="@{repoEntity.description}"
             />
 
     </LinearLayout>

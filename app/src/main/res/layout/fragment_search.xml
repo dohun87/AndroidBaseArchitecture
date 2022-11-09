@@ -87,9 +87,7 @@
                     android:layout_height="match_parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
-                    bind:setItems="@{vm.searchList}"
-                    bind:scrollListener="@{vm}"
-                    bind:setSelectRepo="@{vm}"
+                    app:addScrollListener="@{vm}"
                     />
 
             </RelativeLayout>
